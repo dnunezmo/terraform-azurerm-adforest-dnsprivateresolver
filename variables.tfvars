@@ -2,7 +2,7 @@
 enable_public_ip_address = true
 
 # Onpremises Resource Group, location, VNet and Subnet details
-onprem_resource_group_name  = "onprem-net-001"
+onprem_resource_group_name  = "onprem-rg-001"
 onprem_location             = "westeurope"
 onprem_virtual_network_name = "onprem-vnet"
 onprem_subnet_name          = "onprem-snet-management"
@@ -23,24 +23,46 @@ onprem_private_ip_address                 = ["10.8.0.4"]
 onprem_active_directory_domain       = "onprem.com"
 onprem_active_directory_netbios_name = "ONPREM"
 
-# Azure Resource Group, location, VNet and Subnet details
-azure_resource_group_name          = "contoso-hub-001"
 azure_location                     = "westeurope"
-azure_virtual_network_name         = "contoso-vnet"
-azure_subnet_name                  = "contoso-snet-management"
-azure_inbound_subnet_name          = "contoso-snet-inbound-endpoint"
-azure_outbound_subnet_name         = "contoso-snet-outbound-endpoint"
-azure_private_endpoint_subnet_name = "contoso-snet-private-endpoint"
+
+# Core Hub Resource Group, location, VNet and Subnet details
+core_hub_resource_group_name          = "core-hub-rg-001"
+core_hub_virtual_network_name         = "core-hub-vnet"
+core_hub_subnet_name                  = "core-hub-snet-management"
+core_hub_inbound_subnet_name          = "core-hub-snet-inbound-endpoint"
+core_hub_outbound_subnet_name         = "core-hub-snet-outbound-endpoint"
+core_hub_private_endpoint_subnet_name = "core-hub-snet-private-endpoint"
+core_hub_private_ip_address                 = ["10.0.0.4"]
 
 # This module support multiple Pre-Defined Linux and Windows Distributions.
 # Windows Images: windows2012r2dc, windows2016dc, windows2019dc
-azure_virtual_machine_name               = "contoso-dc-01"
-azure_windows_distribution_name          = "windows2019dc"
-azure_virtual_machine_size               = "Standard_B2s"
-azure_admin_username                     = "batman"
-azure_admin_password                     = "P@$$w0rd1234!"
-azure_private_ip_address_allocation_type = "Static"
-azure_private_ip_address                 = ["10.0.0.4"]
+core_hub_virtual_machine_name               = "contoso-dc-01"
+core_hub_windows_distribution_name          = "windows2019dc"
+core_hub_virtual_machine_size               = "Standard_B2s"
+core_hub_admin_username                     = "batman"
+core_hub_admin_password                     = "P@$$w0rd1234!"
+core_hub_private_ip_address_allocation_type = "Static"
+
+
+# App Resource Group, location, VNet and Subnet details
+app_resource_group_name              = "app-rg-001"
+app_hub_virtual_network_name         = "app-hub-vnet"
+app_hub_subnet_name                  = "app-hub-snet-vms"
+app_hub_azure_firewall_subnet_name   = "AzureFirewallSubnet"
+
+# App Resource Group, location, VNet and Subnet details
+app_spoke_virtual_network_name         = "app-spoke-vnet"
+app_spoke_subnet_name                  = "app-spoke-snet-vms"
+app_spoke_private_endpoint_subnet_name = "app-spoke-snet-private-endpoint"
+
+# This module support multiple Pre-Defined Linux and Windows Distributions.
+# Windows Images: windows2012r2dc, windows2016dc, windows2019dc
+app_spoke_virtual_machine_name               = "contoso-srv-01"
+app_spoke_windows_distribution_name          = "windows2019dc"
+app_spoke_virtual_machine_size               = "Standard_B2s"
+app_spoke_admin_username                     = "batman"
+app_spoke_admin_password                     = "P@$$w0rd1234!"
+app_spoke_private_ip_address_allocation_type = "Dynamic"
 
 # Active Directory domain and netbios details
 # Intended for test/demo purposes
@@ -56,7 +78,7 @@ nsg_inbound_rules = [
   {
     name                   = "rdp"
     destination_port_range = "3389"
-    source_address_prefix  = "<your-public-IP-address>"
+    source_address_prefix  = "<<youriphere>>"
   },
 ]
 
