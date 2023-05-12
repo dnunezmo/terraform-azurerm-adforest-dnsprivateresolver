@@ -12,7 +12,8 @@ resource "azurerm_firewall" "app_hub_firewall" {
   resource_group_name = azurerm_resource_group.app_rg.name
   sku_name            = "AZFW_VNet"
   sku_tier            = "Standard"
-  private_ip_ranges = ["10.0.0.0/8"]
+  private_ip_ranges   = ["10.0.0.0/8"]
+  dns_servers         = ["168.63.129.16"]
 
   ip_configuration {
     name                 = "configuration"

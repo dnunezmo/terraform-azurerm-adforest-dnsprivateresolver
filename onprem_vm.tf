@@ -48,6 +48,7 @@ resource "azurerm_network_interface" "onprem_nic" {
   enable_ip_forwarding          = var.onprem_enable_ip_forwarding
   enable_accelerated_networking = var.onprem_enable_accelerated_networking
   tags                          = merge({ "ResourceName" = var.onprem_instances_count == 1 ? lower("nic-${format("vm%s", lower(replace(var.onprem_virtual_machine_name, "/[[:^alnum:]]/", "")))}") : lower("nic-${format("vm%s%s", lower(replace(var.onprem_virtual_machine_name, "/[[:^alnum:]]/", "")), count.index + 1)}") }, var.tags, )
+  depends_on = [ azurerm_subnet.onprem_snet ]
 
   ip_configuration {
     name                          = lower("ipconig-${format("vm%s%s", lower(replace(var.onprem_virtual_machine_name, "/[[:^alnum:]]/", "")), count.index + 1)}")
@@ -71,37 +72,37 @@ resource "azurerm_availability_set" "onprem_aset" {
 }
 
 #---------------------------------------------------------------
-# Onpremises Network security group for Virtual Machine Network Interface
+# Onpremises Network security group for Virtual Machine Network Interface - Commented since not needed in MCAPs subscription
 #---------------------------------------------------------------
-resource "azurerm_network_security_group" "onprem_nsg" {
-  name                = lower("nsg_${var.onprem_virtual_machine_name}_${azurerm_resource_group.onprem_rg.location}_in")
-  resource_group_name = azurerm_resource_group.onprem_rg.name
-  location            = azurerm_resource_group.onprem_rg.location
-  tags                = merge({ "ResourceName" = lower("nsg_${var.onprem_virtual_machine_name}_${azurerm_resource_group.onprem_rg.location}_in") }, var.tags, )
-}
+# resource "azurerm_network_security_group" "onprem_nsg" {
+#   name                = lower("nsg_${var.onprem_virtual_machine_name}_${azurerm_resource_group.onprem_rg.location}_in")
+#   resource_group_name = azurerm_resource_group.onprem_rg.name
+#   location            = azurerm_resource_group.onprem_rg.location
+#   tags                = merge({ "ResourceName" = lower("nsg_${var.onprem_virtual_machine_name}_${azurerm_resource_group.onprem_rg.location}_in") }, var.tags, )
+# }
 
-resource "azurerm_network_security_rule" "onprem_nsg_rule" {
-  for_each                    = local.nsg_inbound_rules
-  name                        = each.key
-  priority                    = 100 * (each.value.idx + 1)
-  direction                   = "Inbound"
-  access                      = "Allow"
-  protocol                    = "Tcp"
-  source_port_range           = "*"
-  destination_port_range      = each.value.security_rule.destination_port_range
-  source_address_prefix       = each.value.security_rule.source_address_prefix
-  destination_address_prefix  = element(concat(azurerm_subnet.onprem_snet.address_prefixes, [""]), 0)
-  description                 = "Inbound_Port_${each.value.security_rule.destination_port_range}"
-  resource_group_name         = azurerm_resource_group.onprem_rg.name
-  network_security_group_name = azurerm_network_security_group.onprem_nsg.name
-  depends_on                  = [azurerm_network_security_group.onprem_nsg]
-}
+# resource "azurerm_network_security_rule" "onprem_nsg_rule" {
+#   for_each                    = local.nsg_inbound_rules
+#   name                        = each.key
+#   priority                    = 100 * (each.value.idx + 1)
+#   direction                   = "Inbound"
+#   access                      = "Allow"
+#   protocol                    = "Tcp"
+#   source_port_range           = "*"
+#   destination_port_range      = each.value.security_rule.destination_port_range
+#   source_address_prefix       = each.value.security_rule.source_address_prefix
+#   destination_address_prefix  = element(concat(azurerm_subnet.onprem_snet.address_prefixes, [""]), 0)
+#   description                 = "Inbound_Port_${each.value.security_rule.destination_port_range}"
+#   resource_group_name         = azurerm_resource_group.onprem_rg.name
+#   network_security_group_name = azurerm_network_security_group.onprem_nsg.name
+#   depends_on                  = [azurerm_network_security_group.onprem_nsg]
+# }
 
-resource "azurerm_network_interface_security_group_association" "onprem_nsgassoc" {
-  count                     = var.onprem_instances_count
-  network_interface_id      = element(concat(azurerm_network_interface.onprem_nic.*.id, [""]), count.index)
-  network_security_group_id = azurerm_network_security_group.onprem_nsg.id
-}
+# resource "azurerm_network_interface_security_group_association" "onprem_nsgassoc" {
+#   count                     = var.onprem_instances_count
+#   network_interface_id      = element(concat(azurerm_network_interface.onprem_nic.*.id, [""]), count.index)
+#   network_security_group_id = azurerm_network_security_group.onprem_nsg.id
+# }
 
 #---------------------------------------
 # Onpremises Windows Virutal machine

@@ -11,10 +11,11 @@ resource "azurerm_virtual_network" "core_hub_vnet" {
   address_space       = ["10.0.0.0/16"]
 }
 
-resource "azurerm_virtual_network_dns_servers" "core_hub_dns" {
-  virtual_network_id = azurerm_virtual_network.core_hub_vnet.id
-  dns_servers        = var.core_hub_private_ip_address
-}
+# This is not needed as this vnet will use the default dns server
+# resource "azurerm_virtual_network_dns_servers" "core_hub_dns" {
+#   virtual_network_id = azurerm_virtual_network.core_hub_vnet.id
+#   dns_servers        = var.core_hub_private_ip_address
+# }
 
 resource "azurerm_subnet" "core_hub_snet" {
   name                 = var.core_hub_subnet_name

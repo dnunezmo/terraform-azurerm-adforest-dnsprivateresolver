@@ -20,7 +20,7 @@ onprem_private_ip_address                 = ["10.8.0.4"]
 # Active Directory domain and netbios details
 # Intended for test/demo purposes
 # For production use of this module, fortify the security by adding correct nsg rules
-onprem_active_directory_domain       = "onprem.com"
+onprem_active_directory_domain       = "onprem.contosodnslab.com"
 onprem_active_directory_netbios_name = "ONPREM"
 
 azure_location                     = "westeurope"
@@ -67,8 +67,8 @@ app_spoke_private_ip_address_allocation_type = "Dynamic"
 # Active Directory domain and netbios details
 # Intended for test/demo purposes
 # For production use of this module, fortify the security by adding correct nsg rules
-azure_active_directory_domain       = "contoso.com"
-azure_active_directory_netbios_name = "CONTOSO"
+core_hub_active_directory_domain       = "ad.azure.contosodnslab.com"
+core_hub_active_directory_netbios_name = "AZURE"
 
 # Network Seurity group port allow definitions for each Virtual Machine
 # NSG association to be added automatically for all network interfaces.
@@ -78,7 +78,7 @@ nsg_inbound_rules = [
   {
     name                   = "rdp"
     destination_port_range = "3389"
-    source_address_prefix  = "<<youriphere>>"
+    source_address_prefix  = "88.0.163.178"
   },
 ]
 

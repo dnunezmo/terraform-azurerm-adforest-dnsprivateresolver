@@ -128,7 +128,7 @@ variable "onprem_windows_distribution_name" {
 
 variable "onprem_os_disk_storage_account_type" {
   description = "The Type of Storage Account which should back this the Internal OS Disk. Possible values include Standard_LRS, StandardSSD_LRS and Premium_LRS."
-  default     = "StandardSSD_LRS"
+  default     = "Standard_LRS"
 }
 
 variable "onprem_admin_username" {
@@ -311,7 +311,7 @@ variable "core_hub_windows_distribution_name" {
 
 variable "core_hub_os_disk_storage_account_type" {
   description = "The Type of Storage Account which should back this the Internal OS Disk. Possible values include Standard_LRS, StandardSSD_LRS and Premium_LRS."
-  default     = "StandardSSD_LRS"
+  default     = "Standard_LRS"
 }
 
 variable "core_hub_admin_username" {
@@ -469,7 +469,7 @@ variable "app_spoke_windows_distribution_name" {
 
 variable "app_spoke_os_disk_storage_account_type" {
   description = "The Type of Storage Account which should back this the Internal OS Disk. Possible values include Standard_LRS, StandardSSD_LRS and Premium_LRS."
-  default     = "StandardSSD_LRS"
+  default     = "Standard_LRS"
 }
 
 variable "app_spoke_admin_username" {

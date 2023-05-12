@@ -9,10 +9,11 @@ resource "azurerm_virtual_network" "app_hub_vnet" {
   address_space       = ["10.1.0.0/16"]
 }
 
-resource "azurerm_virtual_network_dns_servers" "app_hub_dns" {
-  virtual_network_id = azurerm_virtual_network.app_hub_vnet.id
-  dns_servers        = azurerm_private_dns_resolver_inbound_endpoint.inbound_endpoint.ip_configurations[*].private_ip_address
-}
+# This is not needed as this vnet will use the default dns server
+# resource "azurerm_virtual_network_dns_servers" "app_hub_dns" {
+#   virtual_network_id = azurerm_virtual_network.app_hub_vnet.id
+#   dns_servers        = azurerm_firewall.app_hub_firewall.ip_configuration.*.private_ip_address
+# }
 
 resource "azurerm_subnet" "app_hub_snet" {
   name                 = var.app_hub_subnet_name

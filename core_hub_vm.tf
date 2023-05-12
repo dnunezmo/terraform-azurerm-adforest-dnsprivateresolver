@@ -69,37 +69,37 @@ resource "azurerm_availability_set" "core_hub_aset" {
 }
 
 #---------------------------------------------------------------
-# Network security group for Virtual Machine Network Interface
+# Network security group for Virtual Machine Network Interface - Commented since not needed in MCAPs subscription
 #---------------------------------------------------------------
-resource "azurerm_network_security_group" "core_hub_nsg" {
-  name                = lower("nsg_${var.core_hub_virtual_machine_name}_${azurerm_resource_group.core_hub_rg.location}_in")
-  resource_group_name = azurerm_resource_group.core_hub_rg.name
-  location            = azurerm_resource_group.core_hub_rg.location
-  tags                = merge({ "ResourceName" = lower("nsg_${var.core_hub_virtual_machine_name}_${azurerm_resource_group.core_hub_rg.location}_in") }, var.tags, )
-}
+# resource "azurerm_network_security_group" "core_hub_nsg" {
+#   name                = lower("nsg_${var.core_hub_virtual_machine_name}_${azurerm_resource_group.core_hub_rg.location}_in")
+#   resource_group_name = azurerm_resource_group.core_hub_rg.name
+#   location            = azurerm_resource_group.core_hub_rg.location
+#   tags                = merge({ "ResourceName" = lower("nsg_${var.core_hub_virtual_machine_name}_${azurerm_resource_group.core_hub_rg.location}_in") }, var.tags, )
+# }
 
-resource "azurerm_network_security_rule" "core_hub_nsg_rule" {
-  for_each                    = local.nsg_inbound_rules
-  name                        = each.key
-  priority                    = 100 * (each.value.idx + 1)
-  direction                   = "Inbound"
-  access                      = "Allow"
-  protocol                    = "Tcp"
-  source_port_range           = "*"
-  destination_port_range      = each.value.security_rule.destination_port_range
-  source_address_prefix       = each.value.security_rule.source_address_prefix
-  destination_address_prefix  = element(concat(azurerm_subnet.core_hub_snet.address_prefixes, [""]), 0)
-  description                 = "Inbound_Port_${each.value.security_rule.destination_port_range}"
-  resource_group_name         = azurerm_resource_group.core_hub_rg.name
-  network_security_group_name = azurerm_network_security_group.core_hub_nsg.name
-  depends_on                  = [azurerm_network_security_group.core_hub_nsg]
-}
+# resource "azurerm_network_security_rule" "core_hub_nsg_rule" {
+#   for_each                    = local.nsg_inbound_rules
+#   name                        = each.key
+#   priority                    = 100 * (each.value.idx + 1)
+#   direction                   = "Inbound"
+#   access                      = "Allow"
+#   protocol                    = "Tcp"
+#   source_port_range           = "*"
+#   destination_port_range      = each.value.security_rule.destination_port_range
+#   source_address_prefix       = each.value.security_rule.source_address_prefix
+#   destination_address_prefix  = element(concat(azurerm_subnet.core_hub_snet.address_prefixes, [""]), 0)
+#   description                 = "Inbound_Port_${each.value.security_rule.destination_port_range}"
+#   resource_group_name         = azurerm_resource_group.core_hub_rg.name
+#   network_security_group_name = azurerm_network_security_group.core_hub_nsg.name
+#   depends_on                  = [azurerm_network_security_group.core_hub_nsg]
+# }
 
-resource "azurerm_network_interface_security_group_association" "core_hub_nsgassoc" {
-  count                     = var.core_hub_instances_count
-  network_interface_id      = element(concat(azurerm_network_interface.core_hub_nic.*.id, [""]), count.index)
-  network_security_group_id = azurerm_network_security_group.core_hub_nsg.id
-}
+# resource "azurerm_network_interface_security_group_association" "core_hub_nsgassoc" {
+#   count                     = var.core_hub_instances_count
+#   network_interface_id      = element(concat(azurerm_network_interface.core_hub_nic.*.id, [""]), count.index)
+#   network_security_group_id = azurerm_network_security_group.core_hub_nsg.id
+# }
 
 #---------------------------------------
 # Windows Virutal machine

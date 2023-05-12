@@ -9,10 +9,10 @@ resource "azurerm_virtual_network" "app_spoke_vnet" {
   address_space       = ["192.168.0.0/16"]
 }
 
-# resource "azurerm_virtual_network_dns_servers" "app_spoke_dns" {
-#   virtual_network_id = azurerm_virtual_network.app_spoke_vnet.id
-#   dns_servers        = var.core_hub_private_ip_address
-# }
+resource "azurerm_virtual_network_dns_servers" "app_spoke_dns" {
+  virtual_network_id = azurerm_virtual_network.app_spoke_vnet.id
+  dns_servers        = azurerm_firewall.app_hub_firewall.ip_configuration.*.private_ip_address
+}
 
 resource "azurerm_subnet" "app_spoke_snet" {
   name                 = var.app_spoke_subnet_name
